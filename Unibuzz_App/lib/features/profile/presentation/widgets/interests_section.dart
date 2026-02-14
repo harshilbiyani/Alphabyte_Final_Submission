@@ -14,7 +14,7 @@ class _InterestsSectionState extends State<InterestsSection> {
   final List<String> _availableInterests = [
     'Technical', 'Cultural', 'Sports', 'Gaming', 'Music', 'Coding', 'Debate', 'Art', 'Dance'
   ];
-  
+
   late List<String> _userInterests;
 
   @override
@@ -41,17 +41,19 @@ class _InterestsSectionState extends State<InterestsSection> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Icon(Icons.edit, size: 16, color: Colors.white.withOpacity(0.4)),
+              Icon(Icons.edit, size: 16, color: Colors.white.withValues(alpha: 0.4)),
             ],
           ),
         ),
-        
+
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: _availableInterests.map((interest) {
+            children: _availableInterests.asMap().entries.map((entry) {
+              final index = entry.key;
+              final interest = entry.value;
               final isSelected = _userInterests.contains(interest);
               return GestureDetector(
                 onTap: () {
@@ -64,14 +66,26 @@ class _InterestsSectionState extends State<InterestsSection> {
                   });
                 },
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 250),
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFFC6FF33) : Colors.transparent,
+                    color: isSelected
+                        ? AppColors.accent
+                        : Colors.white.withValues(alpha: 0.04),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: isSelected ? const Color(0xFFC6FF33) : Colors.white.withOpacity(0.2),
+                      color: isSelected
+                          ? AppColors.accent
+                          : Colors.white.withValues(alpha: 0.12),
                     ),
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: AppColors.accent.withValues(alpha: 0.25),
+                              blurRadius: 8,
+                            ),
+                          ]
+                        : [],
                   ),
                   child: Text(
                     interest,
@@ -82,11 +96,11 @@ class _InterestsSectionState extends State<InterestsSection> {
                     ),
                   ),
                 ),
-              );
+              ).animate().fade(delay: (40 * index).ms, duration: 300.ms).scaleXY(begin: 0.9, end: 1);
             }).toList(),
           ),
         ),
       ],
-    ).animate().fadeIn(delay: 300.ms);
+    );
   }
 }

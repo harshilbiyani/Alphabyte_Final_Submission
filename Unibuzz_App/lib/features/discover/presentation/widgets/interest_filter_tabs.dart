@@ -41,7 +41,7 @@ class InterestFilterTabs extends StatelessWidget {
               margin: const EdgeInsets.only(right: 10),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: isSelected ? AppColors.accent.withOpacity(0.1) : Colors.white.withOpacity(0.05),
+                color: isSelected ? AppColors.accent.withValues(alpha: 0.1) : Colors.white.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: isSelected ? AppColors.accent : Colors.transparent,
@@ -49,7 +49,7 @@ class InterestFilterTabs extends StatelessWidget {
                 ),
                 boxShadow: isSelected ? [
                   BoxShadow(
-                    color: AppColors.accent.withOpacity(0.2),
+                    color: AppColors.accent.withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 0),
                   )

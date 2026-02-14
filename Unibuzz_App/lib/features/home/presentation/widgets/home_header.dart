@@ -1,7 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/page_transitions.dart';
 import '../../../notifications/presentation/pages/notification_page.dart';
 
 class HomeHeader extends StatelessWidget {
@@ -9,20 +11,28 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // We use a ClipRRect with BackdropFilter for the glass effect in the status bar area
     return SliverAppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
       pinned: true,
       floating: false,
-      expandedHeight: 80.0,
+      expandedHeight: 90.0,
       flexibleSpace: ClipRRect(
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
           child: Container(
-            color: Colors.black.withOpacity(0.3),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withValues(alpha: 0.6),
+                  Colors.black.withValues(alpha: 0.0),
+                ],
+              ),
+            ),
             child: const FlexibleSpaceBar(
-              background: SizedBox(), // Keep it simple
+              background: SizedBox(),
             ),
           ),
         ),
@@ -30,84 +40,109 @@ class HomeHeader extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Logo
+          // Logo with glow
           Image.asset(
             'assets/images/unibuzz_logo.png',
             height: 40,
             fit: BoxFit.contain,
             errorBuilder: (context, error, stackTrace) {
-               // Fallback to text if asset fails to load dev-side
-               return Text(
-                 'UniBuzz',
-                 style: GoogleFonts.racingSansOne(
-                   fontSize: 28, 
-                   color: Colors.white,
-                 ),
-               );
+              return ShaderMask(
+                shaderCallback: (bounds) => LinearGradient(
+                  colors: [
+                    AppColors.white,
+                    AppColors.accent.withValues(alpha: 0.8),
+                  ],
+                ).createShader(bounds),
+                child: Text(
+                  'UniBuzz',
+                  style: GoogleFonts.racingSansOne(
+                    fontSize: 28,
+                    color: Colors.white, // base color, masked by shader
+                  ),
+                ),
+              );
             },
-          ),
-          
+          ).animate().fadeIn(duration: 600.ms).slideX(begin: -0.1, end: 0),
+
           // Action Icons
           Row(
             children: [
-              _buildIconButton(context, Icons.notifications_none_rounded, isNotification: true),
+              _NotificationBell(),
               const SizedBox(width: 12),
-              _buildProfileAvatar(),
+              _ProfileAvatar(),
             ],
-          ),
+          ).animate().fadeIn(duration: 600.ms, delay: 200.ms).slideX(begin: 0.1, end: 0),
         ],
       ),
     );
   }
+}
 
-  Widget _buildIconButton(BuildContext context, IconData icon, {bool isNotification = false}) {
+class _NotificationBell extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (isNotification) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const NotificationPage()),
-          );
-        }
+        Navigator.push(
+          context,
+          SlideUpRoute(page: const NotificationPage()),
+        );
       },
       child: Container(
-        width: 40,
-        height: 40,
+        width: 42,
+        height: 42,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withValues(alpha: 0.08),
           shape: BoxShape.circle,
-          border: Border.all(color: Colors.white.withOpacity(0.2)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
         ),
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Icon(icon, color: Colors.white, size: 22),
-            if (isNotification)
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Container(
-                  width: 8, 
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFC6FF33),
-                    shape: BoxShape.circle,
-                  ),
+            const Icon(Icons.notifications_none_rounded, color: Colors.white, size: 22),
+            Positioned(
+              top: 9,
+              right: 9,
+              child: Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: AppColors.accent,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.accent.withValues(alpha: 0.6),
+                      blurRadius: 6,
+                      spreadRadius: 1,
+                    ),
+                  ],
                 ),
-              ),
+              ).animate(onPlay: (c) => c.repeat(reverse: true))
+               .scaleXY(begin: 1.0, end: 1.3, duration: 1200.ms),
+            ),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildProfileAvatar() {
+class _ProfileAvatar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      width: 40,
-      height: 40,
+      width: 42,
+      height: 42,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: AppColors.primary.withOpacity(0.5), width: 2),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.6), width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.2),
+            blurRadius: 10,
+            spreadRadius: 1,
+          ),
+        ],
         image: const DecorationImage(
           image: NetworkImage('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80'),
           fit: BoxFit.cover,

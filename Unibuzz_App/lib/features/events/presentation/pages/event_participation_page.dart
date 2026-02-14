@@ -1,8 +1,9 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:glass_kit/glass_kit.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/glass_container.dart';
 import '../../../home/data/mock_home_data.dart';
 
 class EventParticipationPage extends StatefulWidget {
@@ -20,26 +21,21 @@ class _EventParticipationPageState extends State<EventParticipationPage> {
 
   void _confirmParticipation() async {
     setState(() => _isLoading = true);
-    
-    // Simulate API call
     await Future.delayed(const Duration(seconds: 2));
-    
     if (mounted) {
       setState(() {
         _isLoading = false;
         _isSuccess = true;
       });
-      
-      // Auto close after success
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {
-           Navigator.pop(context);
-           ScaffoldMessenger.of(context).showSnackBar(
-             const SnackBar(
-               content: Text('Participation Confirmed! 🎉'),
-               backgroundColor: AppColors.accent,
-             ),
-           );
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Participation Confirmed! 🎉'),
+              backgroundColor: AppColors.accent,
+            ),
+          );
         }
       });
     }
@@ -51,7 +47,7 @@ class _EventParticipationPageState extends State<EventParticipationPage> {
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          // Background Glows
+          // Ambient glows
           Positioned(
             top: -50,
             right: -50,
@@ -60,12 +56,32 @@ class _EventParticipationPageState extends State<EventParticipationPage> {
               height: 200,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.primary.withOpacity(0.2),
-                boxShadow: [BoxShadow(color: AppColors.primary.withOpacity(0.4), blurRadius: 100)],
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.primary.withValues(alpha: 0.15),
+                    Colors.transparent,
+                  ],
+                ),
               ),
             ),
           ),
-
+          Positioned(
+            bottom: 80,
+            left: -40,
+            child: Container(
+              width: 160,
+              height: 160,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.accent.withValues(alpha: 0.06),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
           SafeArea(
             child: Column(
               children: [
@@ -84,7 +100,7 @@ class _EventParticipationPageState extends State<EventParticipationPage> {
                         _buildConfirmationNotice(),
                         const SizedBox(height: 40),
                         _buildCTAButton(),
-                      ],
+                      ].animate(interval: 80.ms).fade().slideY(begin: 0.04, end: 0),
                     ),
                   ),
                 ),
@@ -99,93 +115,130 @@ class _EventParticipationPageState extends State<EventParticipationPage> {
   }
 
   Widget _buildHeader(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
-          ),
-          Text(
-            'CONFIRM PARTICIPATION',
-            style: GoogleFonts.racingSansOne(
-              color: Colors.white,
-              fontSize: 20,
-              letterSpacing: 1.0,
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.white.withValues(alpha: 0.03),
+                Colors.transparent,
+              ],
             ),
           ),
-        ],
+          child: Row(
+            children: [
+              IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
+              ),
+              ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(
+                  colors: [Colors.white, AppColors.accent],
+                ).createShader(bounds),
+                child: Text(
+                  'CONFIRM PARTICIPATION',
+                  style: GoogleFonts.racingSansOne(
+                    color: Colors.white,
+                    fontSize: 20,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ).animate().fade(duration: 400.ms).slideY(begin: -0.1, end: 0);
+  }
+
+  Widget _buildEventSummaryCard() {
+    return GlassContainer(
+      borderRadius: BorderRadius.circular(20),
+      blur: 12,
+      opacity: 0.1,
+      color: AppColors.primary,
+      border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.primary.withValues(alpha: 0.1),
+          blurRadius: 20,
+          offset: const Offset(0, 8),
+        ),
+      ],
+      child: SizedBox(
+        height: 120,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: Image.network(
+                  widget.event.imageUrl,
+                  height: 90,
+                  width: 90,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    height: 90,
+                    width: 90,
+                    color: Colors.grey[900],
+                    child: const Icon(Icons.broken_image, color: Colors.white24),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.event.title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.event.date,
+                      style: TextStyle(
+                        color: AppColors.accent.withValues(alpha: 0.9),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(Icons.location_on, size: 12, color: Colors.white.withValues(alpha: 0.5)),
+                        const SizedBox(width: 4),
+                        Text(
+                          "Main Auditorium",
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.5),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildEventSummaryCard() {
-    return GlassContainer.frostedGlass(
-      height: 120,
-      width: double.infinity,
-      borderRadius: BorderRadius.circular(20),
-      borderColor: AppColors.primary.withOpacity(0.3),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                widget.event.imageUrl,
-                height: 90,
-                width: 90,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.event.title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    widget.event.date,
-                    style: TextStyle(
-                      color: AppColors.accent.withOpacity(0.9),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                   Row(
-                    children: const [
-                       Icon(Icons.location_on, size: 12, color: Colors.white54),
-                       SizedBox(width: 4),
-                       Text(
-                        "Main Auditorium",
-                        style: TextStyle(color: Colors.white54, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    ).animate().fadeIn().slideX();
-  }
-
   Widget _buildParticipantDetails() {
-    // Mock user data - in real app, fetch from Supabase
     final details = {
       'Full Name': 'Ansh D',
       'PRN': '1032210899',
@@ -207,18 +260,18 @@ class _EventParticipationPageState extends State<EventParticipationPage> {
           ),
         ),
         const SizedBox(height: 10),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white10),
-          ),
+        GlassContainer(
+          borderRadius: BorderRadius.circular(20),
+          blur: 10,
+          opacity: 0.06,
+          color: Colors.white,
+          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
           child: Column(
             children: [
-               ...details.entries.map((e) => _buildDetailRow(e.key, e.value)).toList(),
+              ...details.entries.map((e) => _buildDetailRow(e.key, e.value)),
             ],
           ),
-        ).animate().fadeIn(delay: 200.ms),
+        ),
       ],
     );
   }
@@ -231,7 +284,7 @@ class _EventParticipationPageState extends State<EventParticipationPage> {
         children: [
           Text(
             label,
-            style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 14),
+            style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 14),
           ),
           Row(
             children: [
@@ -244,7 +297,7 @@ class _EventParticipationPageState extends State<EventParticipationPage> {
                 ),
               ),
               const SizedBox(width: 8),
-              Icon(Icons.lock_outline, size: 12, color: AppColors.accent.withOpacity(0.5)),
+              Icon(Icons.lock_outline, size: 12, color: AppColors.accent.withValues(alpha: 0.5)),
             ],
           ),
         ],
@@ -253,18 +306,25 @@ class _EventParticipationPageState extends State<EventParticipationPage> {
   }
 
   Widget _buildConfirmationNotice() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
-      ),
+    return GlassContainer(
+      borderRadius: BorderRadius.circular(14),
+      blur: 8,
+      opacity: 0.08,
+      color: AppColors.primary,
+      border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+      padding: const EdgeInsets.all(14),
       child: Row(
-        children: const [
-          Icon(Icons.info_outline, color: AppColors.primary, size: 20),
-          SizedBox(width: 12),
-          Expanded(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.2),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.info_outline, color: AppColors.primary, size: 18),
+          ),
+          const SizedBox(width: 12),
+          const Expanded(
             child: Text(
               'Your details will be used for event registration and attendance tracking.',
               style: TextStyle(color: Colors.white70, fontSize: 12),
@@ -276,8 +336,18 @@ class _EventParticipationPageState extends State<EventParticipationPage> {
   }
 
   Widget _buildCTAButton() {
-    return SizedBox(
+    return Container(
       height: 56,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.accent.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
       child: ElevatedButton(
         onPressed: _isLoading ? null : _confirmParticipation,
         style: ElevatedButton.styleFrom(
@@ -304,6 +374,7 @@ class _EventParticipationPageState extends State<EventParticipationPage> {
     ).animate().shimmer(delay: 1.seconds, duration: 2.seconds);
   }
 
+
   Widget _buildSuccessOverlay() {
     return Container(
       color: Colors.black87,
@@ -312,10 +383,16 @@ class _EventParticipationPageState extends State<EventParticipationPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(20),
-              decoration: const BoxDecoration(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
                 color: AppColors.accent,
                 shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.accent.withValues(alpha: 0.5),
+                    blurRadius: 30,
+                  ),
+                ],
               ),
               child: const Icon(Icons.check, color: Colors.black, size: 40),
             ).animate().scale(duration: 400.ms, curve: Curves.elasticOut),

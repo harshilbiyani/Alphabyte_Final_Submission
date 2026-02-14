@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(errorMsg),
-            backgroundColor: Colors.red.withOpacity(0.8),
+            backgroundColor: Colors.red.withValues(alpha: 0.8),
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -74,9 +74,9 @@ class _LoginPageState extends State<LoginPage> {
                  height: 100,
                  width: 100,
                  borderRadius: BorderRadius.circular(50),
-                 borderColor: AppColors.primary.withOpacity(0.5),
+                 borderColor: AppColors.primary.withValues(alpha: 0.5),
                  gradient: LinearGradient(
-                   colors: [AppColors.primary.withOpacity(0.2), AppColors.accent.withOpacity(0.1)],
+                   colors: [AppColors.primary.withValues(alpha: 0.2), AppColors.accent.withValues(alpha: 0.1)],
                    begin: Alignment.topLeft,
                    end: Alignment.bottomRight,
                  ),
@@ -110,13 +110,13 @@ class _LoginPageState extends State<LoginPage> {
                  width: double.infinity,
                  height: 400, // Fixed height for consistency
                  borderRadius: BorderRadius.circular(24),
-                 borderColor: AppColors.glassBorder.withOpacity(0.2),
+                 borderColor: AppColors.glassBorder.withValues(alpha: 0.2),
                  frostedOpacity: 0.05,
                  blur: 15,
                  gradient: LinearGradient(
                    colors: [
-                     Colors.white.withOpacity(0.05),
-                     Colors.white.withOpacity(0.02),
+                     Colors.white.withValues(alpha: 0.05),
+                     Colors.white.withValues(alpha: 0.02),
                    ],
                    begin: Alignment.topLeft,
                    end: Alignment.bottomRight,
@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                      Text(
                        'Enter your login information',
                        style: TextStyle(
-                         color: Colors.white.withOpacity(0.6),
+                         color: Colors.white.withValues(alpha: 0.6),
                          fontSize: 14,
                        ),
                      ),
@@ -170,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                          child: RichText(
                            text: TextSpan(
                              text: "Don't have an account? ",
-                             style: TextStyle(color: Colors.white.withOpacity(0.6)),
+                             style: TextStyle(color: Colors.white.withValues(alpha: 0.6)),
                              children: const [
                                TextSpan(
                                  text: 'Sign Up',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/glass_container.dart';
 import '../../../home/data/mock_home_data.dart';
 
 class DiscoverEventCard extends StatelessWidget {
@@ -24,12 +25,12 @@ class DiscoverEventCard extends StatelessWidget {
         color: const Color(0xFF0A0A0A),
         borderRadius: BorderRadius.circular(28),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.35),
+          color: AppColors.primary.withValues(alpha: 0.35),
           width: 1.2,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(glowOpacity),
+            color: AppColors.primary.withValues(alpha: glowOpacity),
             blurRadius: 28,
             offset: const Offset(0, 10),
           ),
@@ -72,64 +73,64 @@ class DiscoverEventCard extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.black.withOpacity(0.15),
-                      Colors.black.withOpacity(0.55),
-                      Colors.black.withOpacity(0.85),
+                      Colors.black.withValues(alpha: 0.15),
+                      Colors.black.withValues(alpha: 0.55),
+                      Colors.black.withValues(alpha: 0.85),
                     ],
                   ),
                 ),
               ),
             ),
+            // Category badge - glass
             Positioned(
               top: 16,
               left: 16,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
+              child: GlassContainer(
+                borderRadius: BorderRadius.circular(14),
+                blur: 10,
+                opacity: 0.15,
+                color: AppColors.primary,
+                border: Border.all(
+                  color: AppColors.primary.withValues(alpha: 0.6),
+                  width: 1,
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: AppColors.primary.withOpacity(0.6),
-                    width: 1,
-                  ),
-                ),
-                child: Text(
-                  event.category.toUpperCase(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1.1,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  child: Text(
+                    event.category.toUpperCase(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.1,
+                    ),
                   ),
                 ),
               ),
             ),
+            // Date badge - glass
             Positioned(
               top: 16,
               right: 16,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
+              child: GlassContainer(
+                borderRadius: BorderRadius.circular(14),
+                blur: 10,
+                opacity: 0.15,
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  width: 1,
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: Colors.white.withOpacity(0.2),
-                    width: 1,
-                  ),
-                ),
-                child: Text(
-                  badgeText.toUpperCase(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.8,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  child: Text(
+                    badgeText.toUpperCase(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.8,
+                    ),
                   ),
                 ),
               ),
@@ -158,7 +159,7 @@ class DiscoverEventCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.75),
+                      color: Colors.white.withValues(alpha: 0.75),
                       fontSize: 13,
                       height: 1.4,
                     ),
@@ -169,13 +170,13 @@ class DiscoverEventCard extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.chevron_left,
-                          color: Colors.white.withOpacity(0.6),
+                          color: Colors.white.withValues(alpha: 0.6),
                           size: 18,
                         ),
                         Text(
                           'Swipe for next',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.6),
+                            color: Colors.white.withValues(alpha: 0.6),
                             fontSize: 12,
                           ),
                         ),
@@ -183,13 +184,13 @@ class DiscoverEventCard extends StatelessWidget {
                         Text(
                           'Details',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.6),
+                            color: Colors.white.withValues(alpha: 0.6),
                             fontSize: 12,
                           ),
                         ),
                         Icon(
                           Icons.chevron_right,
-                          color: Colors.white.withOpacity(0.6),
+                          color: Colors.white.withValues(alpha: 0.6),
                           size: 18,
                         ),
                       ],

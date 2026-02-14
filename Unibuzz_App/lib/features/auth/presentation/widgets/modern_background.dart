@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'dart:math' as math;
 import '../../../../../core/constants/app_colors.dart';
 
 class ModernBackground extends StatelessWidget {
@@ -83,8 +82,8 @@ class _AbstractShape extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: RadialGradient(
             colors: [
-              color.withOpacity(0.5),
-              color.withOpacity(0.0),
+              color.withValues(alpha: 0.5),
+              color.withValues(alpha: 0.0),
             ],
             center: Alignment.center,
             radius: 0.6,
@@ -92,7 +91,7 @@ class _AbstractShape extends StatelessWidget {
           borderRadius: BorderRadius.circular(size / 2),
         ),
         child: CustomPaint(
-          painter: _FluidPainter(color: color.withOpacity(0.3)),
+          painter: _FluidPainter(color: color.withValues(alpha: 0.3)),
         ),
       ),
     );

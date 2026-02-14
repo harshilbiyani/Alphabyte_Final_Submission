@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/page_transitions.dart';
 import '../../../events/presentation/pages/event_participation_page.dart';
 import '../../../home/data/mock_home_data.dart';
 import 'discover_event_card.dart';
@@ -176,7 +177,7 @@ class _DiscoverSwipeDeckState extends State<DiscoverSwipeDeck>
             Text(
               'No events here yet - check other vibes',
               style: TextStyle(
-                color: Colors.white.withOpacity(0.6),
+                color: Colors.white.withValues(alpha: 0.6),
                 fontSize: 16,
               ),
             ),
@@ -250,10 +251,7 @@ class _DiscoverSwipeDeckState extends State<DiscoverSwipeDeck>
                           onParticipate: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    EventParticipationPage(event: current),
-                              ),
+                              SlideUpRoute(page: EventParticipationPage(event: current)),
                             );
                           },
                         ),
@@ -313,7 +311,7 @@ class _DetailsOverlay extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.fromLTRB(22, 20, 22, 24 + bottomInset),
                     decoration: BoxDecoration(
-                      color: AppColors.glassBackground.withOpacity(0.6),
+                      color: AppColors.glassBackground.withValues(alpha: 0.6),
                       border: Border.all(
                         color: AppColors.glassBorder,
                         width: 1,
@@ -354,7 +352,7 @@ class _DetailsOverlay extends StatelessWidget {
                           maxLines: 4,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                             fontSize: 14,
                             height: 1.4,
                           ),
@@ -420,7 +418,7 @@ class _DetailsRow extends StatelessWidget {
           child: Text(
             text,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.85),
+              color: Colors.white.withValues(alpha: 0.85),
               fontSize: 13,
             ),
           ),
@@ -440,7 +438,7 @@ class _TagChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08),
+        color: Colors.white.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white24),
       ),
@@ -474,7 +472,7 @@ class _DeckIndicator extends StatelessWidget {
           height: 6,
           width: isActive ? 18 : 6,
           decoration: BoxDecoration(
-            color: isActive ? AppColors.primary : Colors.white.withOpacity(0.2),
+            color: isActive ? AppColors.primary : Colors.white.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(10),
           ),
         );

@@ -78,7 +78,11 @@ class _CircularEventCarouselState extends State<CircularEventCarousel> {
               return AnimatedContainer(
                 duration: 300.ms,
                 curve: Curves.easeOutBack,
-                transform: Matrix4.identity()..scale(isActive ? 1.1 : 0.85),
+                transform: Matrix4.diagonal3Values(
+                  isActive ? 1.1 : 0.85,
+                  isActive ? 1.1 : 0.85,
+                  1.0,
+                ),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -100,7 +104,7 @@ class _CircularEventCarouselState extends State<CircularEventCarousel> {
                         boxShadow: [
                           if (isActive)
                             BoxShadow(
-                              color: AppColors.accent.withOpacity(0.6),
+                              color: AppColors.accent.withValues(alpha: 0.6),
                               blurRadius: 20,
                               spreadRadius: 2,
                             ),

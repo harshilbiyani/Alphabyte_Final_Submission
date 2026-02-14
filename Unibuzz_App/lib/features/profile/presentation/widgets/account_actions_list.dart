@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../features/auth/presentation/pages/login_page.dart';  // Assuming this exists from previous context or standard flow
+import '../../../../core/widgets/glass_container.dart';
+import '../../../../features/auth/presentation/pages/login_page.dart';
 
 class AccountActionsList extends StatelessWidget {
   const AccountActionsList({super.key});
@@ -21,11 +21,11 @@ class AccountActionsList extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFF1E1E1E),
-              borderRadius: BorderRadius.circular(16),
-            ),
+          GlassContainer(
+            borderRadius: BorderRadius.circular(16),
+            blur: 10,
+            opacity: 0.08,
+            color: Colors.white,
             child: Column(
               children: [
                 _buildActionTile(Icons.person_outline, "Edit Profile", onTap: () {}),
@@ -37,9 +37,9 @@ class AccountActionsList extends StatelessWidget {
                 _buildActionTile(Icons.help_outline, "Help & Support", onTap: () {}),
                 _buildDivider(),
                 _buildActionTile(
-                  Icons.logout, 
-                  "Logout", 
-                  color: Colors.redAccent, 
+                  Icons.logout,
+                  "Logout",
+                  color: Colors.redAccent,
                   onTap: () => _showLogoutDialog(context),
                 ),
               ],
@@ -50,7 +50,8 @@ class AccountActionsList extends StatelessWidget {
     );
   }
 
-  Widget _buildActionTile(IconData icon, String title, {Color? color, required VoidCallback onTap}) {
+  Widget _buildActionTile(IconData icon, String title,
+      {Color? color, required VoidCallback onTap}) {
     return ListTile(
       leading: Icon(icon, color: color ?? Colors.white70),
       title: Text(
@@ -61,13 +62,13 @@ class AccountActionsList extends StatelessWidget {
           fontWeight: FontWeight.w500,
         ),
       ),
-      trailing: Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.2)),
+      trailing: Icon(Icons.chevron_right, color: Colors.white.withValues(alpha: 0.2)),
       onTap: onTap,
     );
   }
 
   Widget _buildDivider() {
-    return Divider(height: 1, color: Colors.white.withOpacity(0.05), indent: 50);
+    return Divider(height: 1, color: Colors.white.withValues(alpha: 0.05), indent: 50);
   }
 
   void _showLogoutDialog(BuildContext context) {
@@ -75,6 +76,7 @@ class AccountActionsList extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1E1E1E),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text("Logout", style: TextStyle(color: Colors.white)),
         content: const Text(
           "Are you sure you want to logout?",
@@ -87,11 +89,10 @@ class AccountActionsList extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-               // Navigate to Login Page and clear stack
-               Navigator.of(context).pushAndRemoveUntil(
-                 MaterialPageRoute(builder: (context) => const LoginPage()), 
-                 (route) => false
-               );
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+                (route) => false,
+              );
             },
             child: const Text("Logout", style: TextStyle(color: Colors.redAccent)),
           ),

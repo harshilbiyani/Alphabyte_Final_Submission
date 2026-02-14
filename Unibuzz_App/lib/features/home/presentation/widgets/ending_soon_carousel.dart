@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/glass_container.dart';
 import '../../data/mock_home_data.dart';
 import '../../../events/presentation/pages/event_participation_page.dart';
 
@@ -131,13 +132,13 @@ class _EndingSoonCarouselState extends State<EndingSoonCarousel> {
           boxShadow: isActive
               ? [
                   BoxShadow(
-                    color: AppColors.primary.withOpacity(0.4),
+                    color: AppColors.primary.withValues(alpha: 0.4),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                     spreadRadius: 2,
                   ),
                   BoxShadow(
-                    color: AppColors.accent.withOpacity(0.2),
+                    color: AppColors.accent.withValues(alpha: 0.2),
                     blurRadius: 40,
                     offset: const Offset(0, 0),
                     spreadRadius: -5,
@@ -145,7 +146,7 @@ class _EndingSoonCarouselState extends State<EndingSoonCarousel> {
                 ]
               : [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.5),
+                    color: Colors.black.withValues(alpha: 0.5),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -182,57 +183,58 @@ class _EndingSoonCarouselState extends State<EndingSoonCarousel> {
                 },
               ),
 
-              // Glassmorphism / Dark Gradient Overlay for readability
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withOpacity(0.2),
-                      Colors.black.withOpacity(0.8),
+              // Glassmorphism Text Overlay
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: GlassContainer(
+                  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+                  blur: 10,
+                  opacity: 0.1, // Subtle glass
+                  color: Colors.black,
+                  // gradient: LinearGradient(
+                  //   begin: Alignment.topCenter,
+                  //   end: Alignment.bottomCenter,
+                  //   colors: [
+                  //     Colors.black.withValues(alpha: 0.1),
+                  //     Colors.black.withValues(alpha: 0.8),
+                  //   ],
+                  // ),
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        event.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black,
+                              offset: Offset(0, 1),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        event.date,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.7),
+                          fontSize: 12,
+                        ),
+                      ),
                     ],
-                    stops: const [0.4, 0.7, 1.0],
                   ),
-                ),
-              ),
-
-              // Content Content
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      event.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black,
-                            offset: Offset(0, 1),
-                            blurRadius: 4,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      event.date,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
                 ),
               ),
 
@@ -240,22 +242,15 @@ class _EndingSoonCarouselState extends State<EndingSoonCarousel> {
               Positioned(
                 top: 12,
                 right: 12,
-                child: Container(
+                child: GlassContainer(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
                     vertical: 6,
                   ),
-                  decoration: BoxDecoration(
-                    color: AppColors.accent, // Neon Green
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.accent.withOpacity(0.5),
-                        blurRadius: 8,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
+                  color: AppColors.accent, // Neon Green
+                  opacity: 0.8,
+                  blur: 5,
+                  borderRadius: BorderRadius.circular(12),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -284,7 +279,7 @@ class _EndingSoonCarouselState extends State<EndingSoonCarousel> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: AppColors.primary.withOpacity(0.3),
+                      color: AppColors.primary.withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),

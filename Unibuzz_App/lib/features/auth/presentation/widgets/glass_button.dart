@@ -23,7 +23,7 @@ class GlassButton extends StatelessWidget {
         width: double.infinity,
         borderRadius: BorderRadius.circular(16),
         borderColor: AppColors.accent,
-        color: AppColors.primary.withOpacity(0.5),
+        color: AppColors.primary.withValues(alpha: 0.5),
         child: Center(
           child: isLoading
               ? const CircularProgressIndicator(color: AppColors.accent)

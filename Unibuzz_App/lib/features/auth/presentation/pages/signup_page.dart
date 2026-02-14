@@ -230,13 +230,13 @@ class _SignupPageState extends State<SignupPage> {
                      width: double.infinity,
                      height: MediaQuery.of(context).size.height * 0.65,
                      borderRadius: BorderRadius.circular(24),
-                     borderColor: AppColors.glassBorder.withOpacity(0.2),
+                     borderColor: AppColors.glassBorder.withValues(alpha: 0.2),
                      frostedOpacity: 0.05,
                      blur: 15,
                      gradient: LinearGradient(
                        colors: [
-                         Colors.white.withOpacity(0.05),
-                         Colors.white.withOpacity(0.02),
+                         Colors.white.withValues(alpha: 0.05),
+                         Colors.white.withValues(alpha: 0.02),
                        ],
                        begin: Alignment.topLeft,
                        end: Alignment.bottomRight,
@@ -289,7 +289,7 @@ class _SignupPageState extends State<SignupPage> {
               child: RichText(
                  text: TextSpan(
                    text: "Already have an account? ",
-                   style: TextStyle(color: Colors.white.withOpacity(0.6)),
+                   style: TextStyle(color: Colors.white.withValues(alpha: 0.6)),
                    children: const [
                      TextSpan(
                        text: 'Login',
@@ -378,9 +378,9 @@ class _SignupPageState extends State<SignupPage> {
           height: 60,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.glassBorder.withOpacity(0.5)),
+            border: Border.all(color: AppColors.glassBorder.withValues(alpha: 0.5)),
           ),
           child: Row(
             children: [
@@ -412,9 +412,9 @@ class _SignupPageState extends State<SignupPage> {
           height: 60,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.glassBorder.withOpacity(0.5)),
+            border: Border.all(color: AppColors.glassBorder.withValues(alpha: 0.5)),
           ),
           child: Row(
             children: [

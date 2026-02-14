@@ -1,12 +1,14 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart'; // Added missing import
-import '../../../events/presentation/pages/event_participation_page.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/glass_container.dart';
 import '../../data/mock_home_data.dart';
 import '../widgets/ending_soon_carousel.dart';
 import '../widgets/event_feed_card.dart';
 import '../widgets/home_header.dart';
+import '../widgets/hero_category_section.dart';
+import '../../../events/presentation/pages/event_participation_page.dart';
 import '../../../discover/presentation/pages/discover_page.dart';
 import '../../../search/presentation/pages/search_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
@@ -28,7 +30,7 @@ class _HomePageState extends State<HomePage> {
       extendBody: true, // Crucial for floating glass nav
       body: Stack(
         children: [
-          // Background ambient gradient (optional subtle effect)
+          // Background ambient gradient (animated)
           Positioned(
             top: -100,
             right: -100,
@@ -39,11 +41,14 @@ class _HomePageState extends State<HomePage> {
                 height: 300,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.primary.withOpacity(0.15),
+                  color: AppColors.primary.withValues(alpha: 0.15),
                 ),
               ),
             ),
-          ),
+          ).animate(onPlay: (controller) => controller.repeat(reverse: true))
+           .scaleXY(begin: 1.0, end: 1.2, duration: 4.seconds, curve: Curves.easeInOut)
+           .moveY(begin: 0, end: 30, duration: 5.seconds, curve: Curves.easeInOut),
+
           Positioned(
             bottom: 100,
             left: -50,
@@ -54,11 +59,13 @@ class _HomePageState extends State<HomePage> {
                 height: 250,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.accent.withOpacity(0.05),
+                  color: AppColors.accent.withValues(alpha: 0.05),
                 ),
               ),
             ),
-          ),
+          ).animate(onPlay: (controller) => controller.repeat(reverse: true))
+           .scaleXY(begin: 1.0, end: 1.3, duration: 6.seconds, curve: Curves.easeInOut)
+           .moveX(begin: 0, end: 40, duration: 7.seconds, curve: Curves.easeInOut),
 
           // Main Content Area
           IndexedStack(
@@ -80,26 +87,20 @@ class _HomePageState extends State<HomePage> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       height: 70,
-      child: ClipRRect(
+      child: GlassContainer(
         borderRadius: BorderRadius.circular(35),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFF1E1E1E).withOpacity(0.7),
-              borderRadius: BorderRadius.circular(35),
-              border: Border.all(color: Colors.white.withOpacity(0.1)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildNavItem(Icons.home_filled, 0),
-                _buildNavItem(Icons.explore_outlined, 1),
-                _buildNavItem(Icons.search, 2),
-                _buildNavItem(Icons.person_outline, 3),
-              ],
-            ),
-          ),
+        blur: 15,
+        opacity: 0.7,
+        color: const Color(0xFF1E1E1E),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildNavItem(Icons.home_filled, 0),
+            _buildNavItem(Icons.explore_outlined, 1),
+            _buildNavItem(Icons.search, 2),
+            _buildNavItem(Icons.person_outline, 3),
+          ],
         ),
       ),
     );
@@ -114,7 +115,7 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary.withOpacity(0.2)
+              ? AppColors.primary.withValues(alpha: 0.2)
               : Colors.transparent,
           shape: BoxShape.circle,
         ),
@@ -148,6 +149,11 @@ class _HomeContent extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 10),
+              HeroCategorySection(
+                onCategoryTap: (category) {},
+                onCategoryLongPress: (category) {},
+              ),
+              const SizedBox(height: 8),
               const EndingSoonCarousel(),
               const SizedBox(height: 20),
 
@@ -171,7 +177,7 @@ class _HomeContent extends StatelessWidget {
                     Text(
                       'See all',
                       style: TextStyle(
-                        color: AppColors.primary.withOpacity(0.8),
+                        color: AppColors.primary.withValues(alpha: 0.8),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -179,7 +185,7 @@ class _HomeContent extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-            ],
+            ].animate(interval: 100.ms).fade(duration: 500.ms).slideY(begin: 0.1, end: 0, curve: Curves.easeOut),
           ),
         ),
 
@@ -197,7 +203,10 @@ class _HomeContent extends StatelessWidget {
                   ),
                 );
               },
-              child: EventFeedCard(event: event),
+              child: EventFeedCard(event: event)
+                  .animate()
+                  .fade(duration: 500.ms, delay: (100 * index).ms)
+                  .slideY(begin: 0.1, end: 0, curve: Curves.easeOut),
             );
           }, childCount: MockHomeData.feedEvents.length),
         ),
