@@ -15,6 +15,13 @@ import '../../../discover/presentation/pages/discover_page.dart';
 import '../../../search/presentation/pages/search_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../mentor/presentation/pages/mentor_page.dart';
+import '../../../hackathons/presentation/pages/hackathon_page.dart';
+import '../../../cultural/presentation/pages/cultural_page.dart';
+import '../../../sports/presentation/pages/sports_page.dart';
+import '../../../gaming/presentation/pages/gaming_page.dart';
+import '../../../sessions/presentation/pages/sessions_page.dart';
+import '../../../clubs/presentation/pages/clubs_page.dart';
+import '../../../fests/presentation/pages/fests_page.dart';
 import '../../../../core/widgets/page_transitions.dart';
 
 class HomePage extends StatefulWidget {
@@ -275,10 +282,37 @@ class _HomeContent extends StatelessWidget {
               const SizedBox(height: 10),
               HeroCategorySection(
                 onCategoryTap: (category) {
-                  if (category == 'Mentors') {
+                  Widget? page;
+                  switch (category) {
+                    case 'Mentors':
+                      page = const MentorPage();
+                      break;
+                    case 'Hackathons':
+                      page = const HackathonPage();
+                      break;
+                    case 'Cultural':
+                      page = const CulturalPage();
+                      break;
+                    case 'Sports':
+                      page = const SportsPage();
+                      break;
+                    case 'Gaming':
+                      page = const GamingPage();
+                      break;
+                    case 'Sessions':
+                      page = const SessionsPage();
+                      break;
+                    case 'Clubs':
+                      page = const ClubsPage();
+                      break;
+                    case 'Fests':
+                      page = const FestsPage();
+                      break;
+                  }
+                  if (page != null) {
                     Navigator.push(
                       context,
-                      SlideUpRoute(page: const MentorPage()),
+                      SlideUpRoute(page: page),
                     );
                   }
                 },
