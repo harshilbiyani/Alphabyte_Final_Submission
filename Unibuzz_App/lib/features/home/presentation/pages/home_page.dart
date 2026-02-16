@@ -14,6 +14,8 @@ import '../../../events/presentation/pages/event_detail_page.dart';
 import '../../../discover/presentation/pages/discover_page.dart';
 import '../../../search/presentation/pages/search_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
+import '../../../mentor/presentation/pages/mentor_page.dart';
+import '../../../../core/widgets/page_transitions.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -272,7 +274,14 @@ class _HomeContent extends StatelessWidget {
             children: [
               const SizedBox(height: 10),
               HeroCategorySection(
-                onCategoryTap: (category) {},
+                onCategoryTap: (category) {
+                  if (category == 'Mentors') {
+                    Navigator.push(
+                      context,
+                      SlideUpRoute(page: const MentorPage()),
+                    );
+                  }
+                },
                 onCategoryLongPress: (category) {},
               ),
               const SizedBox(height: 8),
