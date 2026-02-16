@@ -15,13 +15,13 @@ import '../../../discover/presentation/pages/discover_page.dart';
 import '../../../search/presentation/pages/search_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../mentor/presentation/pages/mentor_page.dart';
-import '../../../hackathons/presentation/pages/hackathon_page.dart';
-import '../../../cultural/presentation/pages/cultural_page.dart';
-import '../../../sports/presentation/pages/sports_page.dart';
-import '../../../gaming/presentation/pages/gaming_page.dart';
-import '../../../sessions/presentation/pages/sessions_page.dart';
-import '../../../clubs/presentation/pages/clubs_page.dart';
-import '../../../fests/presentation/pages/fests_page.dart';
+import '../../../events/presentation/pages/hackathons_page.dart';
+import '../../../events/presentation/pages/cultural_page.dart';
+import '../../../events/presentation/pages/sports_page.dart';
+import '../../../events/presentation/pages/gaming_page.dart';
+import '../../../events/presentation/pages/workshops_page.dart';
+import '../../../events/presentation/pages/clubs_page.dart';
+import '../../../events/presentation/pages/fests_page.dart';
 import '../../../../core/widgets/page_transitions.dart';
 
 class HomePage extends StatefulWidget {
@@ -284,11 +284,8 @@ class _HomeContent extends StatelessWidget {
                 onCategoryTap: (category) {
                   Widget? page;
                   switch (category) {
-                    case 'Mentors':
-                      page = const MentorPage();
-                      break;
                     case 'Hackathons':
-                      page = const HackathonPage();
+                      page = const HackathonsPage();
                       break;
                     case 'Cultural':
                       page = const CulturalPage();
@@ -300,7 +297,10 @@ class _HomeContent extends StatelessWidget {
                       page = const GamingPage();
                       break;
                     case 'Sessions':
-                      page = const SessionsPage();
+                      page = const WorkshopsPage();
+                      break;
+                    case 'Mentors':
+                      page = const MentorPage();
                       break;
                     case 'Clubs':
                       page = const ClubsPage();
@@ -310,10 +310,7 @@ class _HomeContent extends StatelessWidget {
                       break;
                   }
                   if (page != null) {
-                    Navigator.push(
-                      context,
-                      SlideUpRoute(page: page),
-                    );
+                    Navigator.push(context, SlideUpRoute(page: page));
                   }
                 },
                 onCategoryLongPress: (category) {},
