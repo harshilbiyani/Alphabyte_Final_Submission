@@ -4,12 +4,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/glass_container.dart';
 import '../../../../core/widgets/particle_field.dart';
 import '../../data/mock_home_data.dart';
-import '../widgets/ending_soon_carousel.dart';
-import '../widgets/event_feed_card.dart';
 import '../widgets/home_header.dart';
 import '../widgets/hero_category_section.dart';
+import '../widgets/hero_carousel.dart';
+import '../widgets/live_activity_feed.dart';
+import '../widgets/stats_banner.dart';
+import '../widgets/trending_events.dart';
+import '../widgets/deadline_strip.dart';
+import '../widgets/leaderboard_peek.dart';
+import '../widgets/buzz_feed.dart';
 import '../../../events/presentation/pages/event_detail_page.dart';
 import '../../../discover/presentation/pages/discover_page.dart';
 import '../../../search/presentation/pages/search_page.dart';
@@ -278,8 +284,70 @@ class _HomeContent extends StatelessWidget {
         const HomeHeader(),
         SliverToBoxAdapter(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
+
+              // ── 1. Animated Greeting ──
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _getGreeting(),
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.6),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    ShaderMask(
+                      shaderCallback: (bounds) => const LinearGradient(
+                        colors: [AppColors.white, AppColors.accent],
+                      ).createShader(bounds),
+                      child: Text(
+                        "WHAT'S BUZZING?",
+                        style: GoogleFonts.racingSansOne(
+                          fontSize: 28,
+                          color: Colors.white,
+                          letterSpacing: 1.5,
+                          shadows: [
+                            Shadow(
+                              color: AppColors.primary.withValues(alpha: 0.5),
+                              blurRadius: 16,
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                        .animate()
+                        .fadeIn(duration: 600.ms)
+                        .slideX(begin: -0.05, end: 0)
+                        .shimmer(
+                          color: AppColors.accent.withValues(alpha: 0.15),
+                          duration: 2500.ms,
+                          delay: 800.ms,
+                        ),
+                  ],
+                ),
+              )
+                  .animate()
+                  .fadeIn(duration: 500.ms)
+                  .slideY(begin: 0.06, end: 0),
+
+              const SizedBox(height: 18),
+
+              // ── 2. Hero Carousel ──
+              const HeroCarousel()
+                  .animate()
+                  .fadeIn(duration: 600.ms, delay: 100.ms)
+                  .slideY(begin: 0.08, end: 0, curve: Curves.easeOut),
+
+              const SizedBox(height: 24),
+
+              // ── 3. Category Cards (animated grid) ──
               HeroCategorySection(
                 onCategoryTap: (category) {
                   Widget? page;
@@ -315,73 +383,204 @@ class _HomeContent extends StatelessWidget {
                 },
                 onCategoryLongPress: (category) {},
               ),
-              const SizedBox(height: 8),
-              const EndingSoonCarousel(),
+
               const SizedBox(height: 24),
 
-              // Feed Header
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Text(
-                      'UPCOMING VIBES',
-                      style: GoogleFonts.racingSansOne(
-                        color: Colors.white,
-                        fontSize: 20,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                    const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: AppColors.primary.withValues(alpha: 0.2),
-                        ),
-                      ),
-                      child: Text(
-                        'See all',
-                        style: TextStyle(
-                          color: AppColors.primaryLight,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-            ].animate(interval: 80.ms).fade(duration: 500.ms).slideY(begin: 0.08, end: 0, curve: Curves.easeOut),
+              // ── 4. Happening Now — Live Activity Feed ──
+              const LiveActivityFeed()
+                  .animate()
+                  .fadeIn(duration: 500.ms, delay: 200.ms)
+                  .slideY(begin: 0.06, end: 0),
+
+              const SizedBox(height: 28),
+
+              // ── 5. Stats Banner — "Your Skills. Verified On Chain." ──
+              const StatsBanner()
+                  .animate()
+                  .fadeIn(duration: 600.ms, delay: 250.ms)
+                  .slideY(begin: 0.06, end: 0),
+
+              const SizedBox(height: 28),
+
+              // ── 6. Trending Events ──
+              const TrendingEvents()
+                  .animate()
+                  .fadeIn(duration: 500.ms, delay: 300.ms)
+                  .slideY(begin: 0.06, end: 0),
+
+              const SizedBox(height: 28),
+
+              // ── 7. "For You" — Personalized Picks ──
+              _buildForYouSection(context),
+
+              const SizedBox(height: 28),
+
+              // ── 8. Deadlines Approaching ──
+              const DeadlineStrip()
+                  .animate()
+                  .fadeIn(duration: 500.ms, delay: 350.ms)
+                  .slideY(begin: 0.06, end: 0),
+
+              const SizedBox(height: 28),
+
+              // ── 9. Leaderboard Peek ──
+              const LeaderboardPeek()
+                  .animate()
+                  .fadeIn(duration: 500.ms, delay: 400.ms)
+                  .slideY(begin: 0.06, end: 0),
+
+              const SizedBox(height: 28),
+
+              // ── 10. Buzz Feed — Community Moments ──
+              const BuzzFeed()
+                  .animate()
+                  .fadeIn(duration: 500.ms, delay: 450.ms)
+                  .slideY(begin: 0.06, end: 0),
+
+              const SizedBox(height: 120),
+            ],
           ),
         ),
-
-        // Event Feed
-        SliverList(
-          delegate: SliverChildBuilderDelegate((context, index) {
-            final event = MockHomeData.feedEvents[index];
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EventDetailPage(event: event),
-                  ),
-                );
-              },
-              child: EventFeedCard(event: event)
-                  .animate()
-                  .fade(duration: 500.ms, delay: (80 * index).ms)
-                  .slideY(begin: 0.08, end: 0, curve: Curves.easeOut),
-            );
-          }, childCount: MockHomeData.feedEvents.length),
-        ),
-
-        const SliverToBoxAdapter(child: SizedBox(height: 110)),
       ],
+    );
+  }
+
+  static String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 5) return '🌙 Late Night Grind?';
+    if (hour < 12) return '☀️ Good Morning';
+    if (hour < 17) return '🌤 Good Afternoon';
+    if (hour < 21) return '🌆 Good Evening';
+    return '🌙 Night Owl Mode';
+  }
+
+  static Widget _buildForYouSection(BuildContext context) {
+    final event = MockHomeData.feedEvents[1]; // AI Workshop as recommendation
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text('🎯', style: TextStyle(fontSize: 18)),
+              const SizedBox(width: 6),
+              Text(
+                'PICKED FOR YOU',
+                style: GoogleFonts.racingSansOne(
+                  color: Colors.white,
+                  fontSize: 18,
+                  letterSpacing: 1.2,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'Based on your interests & activity',
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.4),
+              fontSize: 12,
+            ),
+          ),
+          const SizedBox(height: 14),
+          GestureDetector(
+            onTap: () {
+              HapticFeedback.lightImpact();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => EventDetailPage(event: event)),
+              );
+            },
+            child: GlassContainer(
+              borderRadius: BorderRadius.circular(18),
+              blur: 14,
+              opacity: 0.06,
+              padding: const EdgeInsets.all(16),
+              border: Border.all(color: AppColors.primary.withValues(alpha: 0.15)),
+              glowColor: AppColors.primary,
+              glowIntensity: 0.05,
+              child: Row(
+                children: [
+                  // Event image
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      event.imageUrl,
+                      width: 70,
+                      height: 70,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        width: 70,
+                        height: 70,
+                        color: AppColors.surfaceLight,
+                        child: const Icon(Icons.broken_image, color: Colors.white24),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            event.category.toUpperCase(),
+                            style: TextStyle(
+                              color: AppColors.primaryLight,
+                              fontSize: 9,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          event.title,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          'You attended 3 similar events',
+                          style: TextStyle(
+                            color: AppColors.accent.withValues(alpha: 0.7),
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.accent.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppColors.accent.withValues(alpha: 0.2)),
+                    ),
+                    child: Icon(Icons.arrow_forward_rounded, color: AppColors.accent, size: 18),
+                  ),
+                ],
+              ),
+            ),
+          )
+              .animate(delay: 300.ms)
+              .fadeIn(duration: 500.ms)
+              .slideX(begin: 0.05, end: 0),
+        ],
+      ),
     );
   }
 }
